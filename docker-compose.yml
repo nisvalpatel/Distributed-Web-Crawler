@@ -1,0 +1,89 @@
+services:
+  # Redis - Message broker for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: crawler-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crawler-network
+
+  # MongoDB - Database for storing crawled data
+  mongodb:
+    image: mongo:7
+    container_name: crawler-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    environment:
+      MONGO_INITDB_DATABASE: web_crawler
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crawler-network
+
+  # FastAPI Service - REST API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: crawler-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MONGODB_URI=mongodb://mongodb:27017/
+      - MONGODB_DATABASE=web_crawler
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+    networks:
+      - crawler-network
+    restart: unless-stopped
+
+  # Celery Worker - Crawling tasks
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MONGODB_URI=mongodb://mongodb:27017/
+      - MONGODB_DATABASE=web_crawler
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+    networks:
+      - crawler-network
+    restart: unless-stopped
+
+networks:
+  crawler-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  mongodb_data:
+  mongodb_config:
+

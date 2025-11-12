@@ -1,0 +1,28 @@
+# Example Docker Compose Override File
+# Copy this to docker-compose.override.yml for local development customizations
+# Usage: cp docker-compose.override.yml.example docker-compose.override.yml
+
+version: '3.8'
+
+services:
+  api:
+    # Enable hot-reload for development
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - DEBUG=True
+    
+  worker:
+    # Reduce concurrency for development
+    command: celery -A src.worker.tasks worker --loglevel=debug --concurrency=2
+    
+  # Add Flower for Celery monitoring (optional)
+  # flower:
+  #   image: mher/flower:2.0
+  #   command: celery --broker=redis://redis:6379/0 flower --port=5555
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - redis
+  #   networks:
+  #     - crawler-network
+
