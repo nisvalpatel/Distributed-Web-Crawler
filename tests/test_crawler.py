@@ -64,6 +64,25 @@ def test_health_check() -> bool:
         return False
 
 
+def test_ping() -> bool:
+    """Lightweight ping check"""
+    print_header("Ping: Lightweight Liveness Check")
+
+    try:
+        response = requests.get(f"{API_URL}/ping", timeout=5)
+        data = response.json()
+
+        if response.status_code == 200 and data.get("ping") == "pong":
+            print_success("Ping endpoint responded with pong")
+            return True
+        else:
+            print_error(f"Ping endpoint returned unexpected payload: {data}")
+            return False
+    except Exception as e:
+        print_error(f"Ping endpoint failed: {e}")
+        return False
+
+
 def test_api_info() -> bool:
     """Test 2: API Information"""
     print_header("Test 2: API Information")
@@ -306,6 +325,10 @@ def run_tests():
     
     # Test 1: Health Check
     results.append(("Health Check", test_health_check()))
+
+    # Optional: lightweight ping check (does not fail the suite)
+    ping_ok = test_ping()
+    results.append(("Ping (optional)", ping_ok))
     
     if not results[-1][1]:
         print_error("\n❌ Health check failed. Make sure all services are running:")
