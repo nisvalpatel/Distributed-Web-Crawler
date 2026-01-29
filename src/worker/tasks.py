@@ -75,14 +75,17 @@ def extract_domain(url: str) -> str:
 
 
 def extract_links(soup: BeautifulSoup, base_url: str) -> List[str]:
-    """Extract all links from a page"""
-    links = []
+    """Extract all links from a page.
+
+    Returns a de-duplicated list of absolute URLs.
+    """
+    links_set = set()
     for link in soup.find_all('a', href=True):
         href = link['href']
         # Convert relative URLs to absolute
         absolute_url = urljoin(base_url, href)
-        links.append(absolute_url)
-    return links
+        links_set.add(absolute_url)
+    return list(links_set)
 
 
 def fetch_page(url: str, timeout: int = 10) -> Optional[Dict[str, Any]]:
