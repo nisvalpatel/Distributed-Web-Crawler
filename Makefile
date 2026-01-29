@@ -44,6 +44,10 @@ health: ## Check health of all services
 	@echo "Checking API health..."
 	curl -s http://localhost:8000/health | python3 -m json.tool
 
+ping: ## Lightweight API ping (no DB or worker checks)
+	@echo "Pinging API..."
+	@curl -s http://localhost:8000/ping | python3 -m json.tool || echo "❌ API ping failed"
+
 stats: ## Get crawler statistics
 	@echo "Fetching crawler statistics..."
 	curl -s http://localhost:8000/stats | python3 -m json.tool
