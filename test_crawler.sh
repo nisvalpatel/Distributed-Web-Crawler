@@ -26,13 +26,13 @@ RESPONSE=$(curl -s -X POST "$API_URL/crawl" \
     -H "Content-Type: application/json" \
     -d '{"url": "https://example.com", "max_depth": 1}')
 
-TASK_ID=$(echo $RESPONSE | grep -o '"task_id":"[^"]*"' | cut -d'"' -f4)
+TASK_ID=$(echo "$RESPONSE" | grep -o '"task_id":"[^"]*"' | cut -d'"' -f4)
 
 if [ -n "$TASK_ID" ]; then
     echo "   ✓ Task submitted: $TASK_ID"
 else
-    echo "   ✗ Failed to submit task"
-    echo "   Response: $RESPONSE"
+        echo "   ✗ Failed to submit task"
+        echo "   Response: $RESPONSE"
     exit 1
 fi
 echo ""
@@ -59,7 +59,7 @@ echo ""
 # Check results
 echo "4. Fetching crawl results..."
 RESULTS=$(curl -s "$API_URL/results/example.com")
-PAGE_COUNT=$(echo $RESULTS | grep -o '"count":[0-9]*' | cut -d':' -f2)
+PAGE_COUNT=$(echo "$RESULTS" | grep -o '"count":[0-9]*' | cut -d':' -f2)
 
 if [ -n "$PAGE_COUNT" ] && [ "$PAGE_COUNT" -gt 0 ]; then
     echo "   ✓ Found $PAGE_COUNT page(s) for example.com"
@@ -72,8 +72,8 @@ echo ""
 # Check statistics
 echo "5. Fetching statistics..."
 STATS=$(curl -s "$API_URL/stats")
-TOTAL_PAGES=$(echo $STATS | grep -o '"total_pages":[0-9]*' | cut -d':' -f2)
-TOTAL_DOMAINS=$(echo $STATS | grep -o '"total_domains":[0-9]*' | cut -d':' -f2)
+TOTAL_PAGES=$(echo "$STATS" | grep -o '"total_pages":[0-9]*' | cut -d':' -f2)
+TOTAL_DOMAINS=$(echo "$STATS" | grep -o '"total_domains":[0-9]*' | cut -d':' -f2)
 
 if [ -n "$TOTAL_PAGES" ]; then
     echo "   ✓ Total pages crawled: $TOTAL_PAGES"
