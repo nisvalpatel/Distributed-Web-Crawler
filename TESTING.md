@@ -12,6 +12,12 @@ The easiest way to test everything:
 
 This runs a comprehensive test suite that validates all crawler functionality.
 
+For a very fast signal that the API container is reachable (without checking MongoDB or Celery), you can also hit the lightweight ping endpoint:
+
+```bash
+curl http://localhost:8000/ping
+```
+
 ## What Gets Tested
 
 The test suite verifies:
