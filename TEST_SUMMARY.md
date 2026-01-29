@@ -28,6 +28,7 @@ I've created comprehensive test files for your Distributed Web Crawler. Here's w
 6. Get Specific Page - Queries individual page
 7. List Domains - Lists all crawled domains
 8. Statistics - Gets crawler stats
+9. (Python only) Ping check for the lightweight `/ping` endpoint
 
 ### 2. `tests/test_crawler.py` (Python Version)
 **Location:** `/Users/nisvalpatel/projects/Distributed-Web-Craweler/tests/test_crawler.py`
