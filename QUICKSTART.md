@@ -20,6 +20,12 @@ Open your browser to: **http://localhost:8000/docs**
 
 You'll see the interactive API documentation (Swagger UI).
 
+If you just want to confirm the container is up without touching MongoDB or Celery, hit the lightweight ping endpoint:
+
+```bash
+curl http://localhost:8000/ping
+```
+
 ## Step 3: Submit Your First Crawl
 
 ### Option A: Using the Web UI (Easiest)
