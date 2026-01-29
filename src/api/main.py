@@ -146,6 +146,15 @@ async def root():
     }
 
 
+@app.get("/ping")
+async def ping():
+    """Lightweight liveness probe endpoint."""
+    return {
+        "ping": "pong",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
 @app.get("/health")
 async def health():
     """Health check endpoint"""
