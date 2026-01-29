@@ -19,6 +19,8 @@ from db.mongo import mongo_handler
 
 logger = get_task_logger(__name__)
 
+DEFAULT_USER_AGENT = "Mozilla/5.0 (compatible; DistributedWebCrawler/1.0)"
+
 # Initialize Celery
 redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
 celery_app = Celery(
@@ -101,7 +103,7 @@ def fetch_page(url: str, timeout: int = 10) -> Optional[Dict[str, Any]]:
     """
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (compatible; DistributedWebCrawler/1.0)'
+            "User-Agent": DEFAULT_USER_AGENT
         }
         
         logger.info(f"Fetching: {url}")
