@@ -126,6 +126,14 @@ curl http://localhost:8000/domains
 curl http://localhost:8000/stats
 ```
 
+### Lightweight ping
+
+For simple uptime checks without hitting databases or Celery, you can use the lightweight ping endpoint:
+
+```bash
+curl http://localhost:8000/ping
+```
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
